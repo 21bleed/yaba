@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HUSET | Premium Streaming</title>
+    
+    <!-- Inter Font - Modern and clean like Netflix/Cineby -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Phosphor Icons - Modern icon library -->
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.2"></script>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <nav id="navbar">
+        <div style="display: flex; align-items: center;">
+            <div class="logo" onclick="window.scrollTo({top:0, behavior:'smooth'})">
+                <i class="ph ph-play-circle" style="font-size: 32px;"></i>
+                HUSET
+            </div>
+            <div class="nav-links">
+                <a href="#trending" onclick="scrollToSection('trending')">
+                    <i class="ph ph-house"></i> Hem
+                </a>
+                <a href="#action" onclick="scrollToSection('action')">
+                    <i class="ph ph-film-strip"></i> Serier
+                </a>
+                <a href="#movies" onclick="scrollToSection('movies')">
+                    <i class="ph ph-video-camera"></i> Filmer
+                </a>
+                <a href="#new" onclick="scrollToSection('new')">
+                    <i class="ph ph-sparkle"></i> Nytt
+                </a>
+            </div>
+        </div>
+        <div class="nav-actions">
+            <button class="nav-icon" onclick="randomPick()" title="Slumpa">
+                <i class="ph ph-shuffle"></i>
+            </button>
+            <button class="nav-icon" onclick="toggleSearch()" title="Sök">
+                <i class="ph ph-magnifying-glass"></i>
+            </button>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-bg"><img id="heroImage" src="" alt=""></div>
+        <div class="hero-content">
+            <h1 class="hero-title" id="heroTitle">Laddar...</h1>
+            <div class="hero-meta" id="heroMeta">
+                <span class="hero-rating" id="heroRating">
+                    <i class="ph-fill ph-star"></i>
+                    <span>98% match</span>
+                </span>
+                <span class="separator"></span>
+                <span id="heroYear">2024</span>
+                <span class="separator"></span>
+                <span id="heroGenre">Action</span>
+            </div>
+            <p class="hero-overview" id="heroOverview"></p>
+            <div class="hero-buttons">
+                <button class="btn btn-primary" onclick="openHero()">
+                    <i class="ph-fill ph-play"></i>
+                    Spela Nu
+                </button>
+                <button class="btn btn-secondary" onclick="openHeroInfo()">
+                    <i class="ph ph-info"></i>
+                    Mer Info
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main id="main-content">
+        <!-- Continue Watching Row (Dynamic - shows if data exists) -->
+        <div class="row" id="continue" style="display: none;">
+            <div class="row-header">
+                <div class="row-title">
+                    <i class="ph-fill ph-clock-counter-clockwise"></i>
+                    Fortsätt Titta
+                </div>
+            </div>
+            <div class="slider-container">
+                <button class="slider-arrow left" onclick="scrollSlider('continue', -1)">
+                    <i class="ph ph-caret-left"></i>
+                </button>
+                <div class="slider" id="slider-continue"></div>
+                <button class="slider-arrow right" onclick="scrollSlider('continue', 1)">
+                    <i class="ph ph-caret-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Watch Later Row (Dynamic - shows if data exists) -->
+        <div class="row" id="watchlater" style="display: none;">
+            <div class="row-header">
+                <div class="row-title">
+                    <i class="ph-fill ph-bookmark-simple"></i>
+                    Titta Senare
+                </div>
+            </div>
+            <div class="slider-container">
+                <button class="slider-arrow left" onclick="scrollSlider('watchlater', -1)">
+                    <i class="ph ph-caret-left"></i>
+                </button>
+                <div class="slider" id="slider-watchlater"></div>
+                <button class="slider-arrow right" onclick="scrollSlider('watchlater', 1)">
+                    <i class="ph ph-caret-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Trending Row -->
+        <div class="row" id="trending">
+            <div class="row-header">
+                <div class="row-title">
+                    <i class="ph-fill ph-fire"></i>
+                    Populärt Just Nu
+                </div>
+            </div>
+            <div class="slider-container">
+                <button class="slider-arrow left" onclick="scrollSlider('trending', -1)">
+                    <i class="ph ph-caret-left"></i>
+                </button>
+                <div class="slider" id="slider-trending"></div>
+                <button class="slider-arrow right" onclick="scrollSlider('trending', 1)">
+                    <i class="ph ph-caret-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Action Row -->
+        <div class="row" id="action">
+            <div class="row-header">
+                <div class="row-title">
+                    <i class="ph-fill ph-sword"></i>
+                    Action & Äventyr
+                </div>
+            </div>
+            <div class="slider-container">
+                <button class="slider-arrow left" onclick="scrollSlider('action', -1)">
+                    <i class="ph ph-caret-left"></i>
+                </button>
+                <div class="slider" id="slider-action"></div>
+                <button class="slider-arrow right" onclick="scrollSlider('action', 1)">
+                    <i class="ph ph-caret-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Top Rated Row -->
+        <div class="row" id="toprated">
+            <div class="row-header">
+                <div class="row-title">
+                    <i class="ph-fill ph-star"></i>
+                    Högst Betyg
+                </div>
+            </div>
+            <div class="slider-container">
+                <button class="slider-arrow left" onclick="scrollSlider('toprated', -1)">
+                    <i class="ph ph-caret-left"></i>
+                </button>
+                <div class="slider" id="slider-toprated"></div>
+                <button class="slider-arrow right" onclick="scrollSlider('toprated', 1)">
+                    <i class="ph ph-caret-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Anime Row -->
+        <div class="row" id="anime">
+            <div class="row-header">
+                <div class="row-title">
+                    <i class="ph-fill ph-torii"></i>
+                    Anime
+                </div>
+            </div>
+            <div class="slider-container">
+                <button class="slider-arrow left" onclick="scrollSlider('anime', -1)">
+                    <i class="ph ph-caret-left"></i>
+                </button>
+                <div class="slider" id="slider-anime"></div>
+                <button class="slider-arrow right" onclick="scrollSlider('anime', 1)">
+                    <i class="ph ph-caret-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Comedy Row -->
+        <div class="row" id="comedy">
+            <div class="row-header">
+                <div class="row-title">
+                    <i class="ph-fill ph-smiley"></i>
+                    Komedi
+                </div>
+            </div>
+            <div class="slider-container">
+                <button class="slider-arrow left" onclick="scrollSlider('comedy', -1)">
+                    <i class="ph ph-caret-left"></i>
+                </button>
+                <div class="slider" id="slider-comedy"></div>
+                <button class="slider-arrow right" onclick="scrollSlider('comedy', 1)">
+                    <i class="ph ph-caret-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Sci-Fi Row -->
+        <div class="row" id="scifi">
+            <div class="row-header">
+                <div class="row-title">
+                    <i class="ph-fill ph-rocket"></i>
+                    Sci-Fi & Fantasy
+                </div>
+            </div>
+            <div class="slider-container">
+                <button class="slider-arrow left" onclick="scrollSlider('scifi', -1)">
+                    <i class="ph ph-caret-left"></i>
+                </button>
+                <div class="slider" id="slider-scifi"></div>
+                <button class="slider-arrow right" onclick="scrollSlider('scifi', 1)">
+                    <i class="ph ph-caret-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Horror Row -->
+        <div class="row" id="horror">
+            <div class="row-header">
+                <div class="row-title">
+                    <i class="ph-fill ph-ghost"></i>
+                    Skräck
+                </div>
+            </div>
+            <div class="slider-container">
+                <button class="slider-arrow left" onclick="scrollSlider('horror', -1)">
+                    <i class="ph ph-caret-left"></i>
+                </button>
+                <div class="slider" id="slider-horror"></div>
+                <button class="slider-arrow right" onclick="scrollSlider('horror', 1)">
+                    <i class="ph ph-caret-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Documentary Row -->
+        <div class="row" id="doc">
+            <div class="row-header">
+                <div class="row-title">
+                    <i class="ph-fill ph-globe-hemisphere-west"></i>
+                    Dokumentärer
+                </div>
+            </div>
+            <div class="slider-container">
+                <button class="slider-arrow left" onclick="scrollSlider('doc', -1)">
+                    <i class="ph ph-caret-left"></i>
+                </button>
+                <div class="slider" id="slider-doc"></div>
+                <button class="slider-arrow right" onclick="scrollSlider('doc', 1)">
+                    <i class="ph ph-caret-right"></i>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+        <button class="close-modal" onclick="closeModal()">
+            <i class="ph ph-x"></i>
+        </button>
+        
+        <!-- Video Player with Episode Sidebar -->
+        <div class="player-layout">
+            <div class="video-main">
+                <!-- Mobile Sidebar Toggle -->
+                <button class="mobile-sidebar-btn" id="mobileSidebarBtn" onclick="toggleSidebar()">
+                    <i class="ph ph-list"></i>
+                </button>
+                
+                <div class="video-wrapper" id="videoContainer">
+                    <!-- iframe will be inserted here -->
+                </div>
+            </div>
+            
+            <!-- Episode Selector Sidebar -->
+            <div class="episode-sidebar" id="episodeSidebar">
+                <div class="sidebar-header">
+                    <h3 id="sidebarTitle">Avsnitt</h3>
+                    <button class="sidebar-toggle" onclick="toggleSidebar()">
+                        <i class="ph ph-caret-right"></i>
+                    </button>
+                </div>
+                
+                <!-- Season Selector -->
+                <div class="season-selector" id="seasonSelector" style="display: none;">
+                    <select id="seasonSelect" onchange="changeSeason(this.value)">
+                        <!-- Seasons will be loaded here -->
+                    </select>
+                </div>
+                
+                <!-- Episodes List -->
+                <div class="episodes-list" id="episodesList">
+                    <!-- Episodes will be loaded here -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="modal-info">
+            <div class="modal-header">
+                <img class="modal-poster" id="modalPoster" src="" alt="">
+                <div class="modal-details">
+                    <h2 id="modalTitle"></h2>
+                    <div class="modal-meta">
+                        <span class="modal-rating" id="modalRating">
+                            <i class="ph-fill ph-star"></i>
+                            <span></span>
+                        </span>
+                        <span class="separator" style="width: 4px; height: 4px; background: var(--text-muted); border-radius: 50%;"></span>
+                        <span id="modalYear"></span>
+                        <span class="separator" style="width: 4px; height: 4px; background: var(--text-muted); border-radius: 50%;"></span>
+                        <span id="modalGenre"></span>
+                    </div>
+                    <p class="modal-overview" id="modalOverview"></p>
+                    <div class="modal-actions">
+                        <button class="btn btn-primary" onclick="playCurrent()">
+                            <i class="ph-fill ph-play"></i>
+                            Spela Nu
+                        </button>
+                        <button class="btn btn-secondary" onclick="addToCurrentList()">
+                            <i class="ph ph-plus"></i>
+                            Min Lista
+                        </button>
+                        <button class="btn btn-secondary" onclick="likeCurrent()">
+                            <i class="ph ph-thumbs-up"></i>
+                            Gillar
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding: 0; margin-top: 40px;">
+                <div class="row-title">
+                    <i class="ph-fill ph-thumbs-up"></i>
+                    Liknande titlar
+                </div>
+                <div class="slider-container">
+                    <button class="slider-arrow left" onclick="scrollSlider('recommendations', -1)">
+                        <i class="ph ph-caret-left"></i>
+                    </button>
+                    <div class="slider" id="recommendations"></div>
+                    <button class="slider-arrow right" onclick="scrollSlider('recommendations', 1)">
+                        <i class="ph ph-caret-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Overlay -->
+    <div id="searchOverlay" class="search-overlay">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <i class="ph ph-magnifying-glass"></i>
+                <input type="text" id="searchInput" placeholder="Sök titlar, personer, genrer..." oninput="doSearch(this.value)">
+                <button class="search-close" onclick="toggleSearch()">
+                    <i class="ph ph-x"></i>
+                </button>
+            </div>
+        </div>
+        <div id="searchResults"></div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/app.js"></script>
+</body>
+</html>
